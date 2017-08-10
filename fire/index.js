@@ -2,13 +2,13 @@ const firebase = require('firebase')
 
 // -- // -- // -- // Firebase Config // -- // -- // -- //
 const config = {
-  apiKey: 'AIzaSyBzz-Wq2dzMgM7E8cdSYnYoX5fbVUT-XQo',
-  authDomain: 'firebones-6bc2a.firebaseapp.com',
-  databaseURL: 'https://firebones-6bc2a.firebaseio.com',
-  projectId: 'firebones-6bc2a',
-  storageBucket: 'firebones-6bc2a.appspot.com',
-  messagingSenderId: '1030378391678'
-}
+    apiKey: "AIzaSyAQcfyXfb5wx5ZiB3JtShSyrTDhBft6mdo",
+    authDomain: "precision-electrolysis.firebaseapp.com",
+    databaseURL: "https://precision-electrolysis.firebaseio.com",
+    projectId: "precision-electrolysis",
+    storageBucket: "precision-electrolysis.appspot.com",
+    messagingSenderId: "312260956394"
+  }
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
 // Initialize the app, but make sure to do it only once.
