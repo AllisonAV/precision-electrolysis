@@ -1,16 +1,10 @@
 import React from 'react'
-
+import { Link, browserHistory } from 'react-router'
 import firebase from 'APP/fire'
 
-const google = new firebase.auth.GoogleAuthProvider()
+const auth = firebase.auth()
 
-// Firebase has several built in auth providers:
-// const facebook = new firebase.auth.FacebookAuthProvider()
-// const twitter = new firebase.auth.TwitterAuthProvider()
-// const github = new firebase.auth.GithubAuthProvider()
-// // This last one is the email and password login we all know and
-// // vaguely tolerate:
-// const email = new firebase.auth.EmailAuthProvider()
+// Do external logins in Login
 
 // If you want to request additional permissions, you'd do it
 // like so:
@@ -25,9 +19,77 @@ const google = new firebase.auth.GoogleAuthProvider()
 //
 // google.addScope('https://mail.google.com/')
 
-export default ({ auth }) =>
-  // signInWithPopup will try to open a login popup, and if it's blocked, it'll
-  // redirect. If you prefer, you can signInWithRedirect, which always
-  // redirects.
-  <button className='google login'
-          onClick={() => auth.signInWithPopup(google)}>Login with Google</button>
+export default class extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      email: '',
+      password: ''
+    }
+
+    this.emailSubmit = this.emailSubmit.bind(this)
+  }
+  componentDidMount() {
+    window.loggedIn=false
+    auth && this.setState({ user: auth.currentUser })
+  }
+
+  setEmailPassword = (evt) => {
+    evt.preventDefault()
+    this.setState({ [evt.target.id]: evt.target.value })
+  }
+
+  emailSubmit = (evt) => {
+    evt.preventDefault()
+    if (this.state.email.length && this.state.password.length) {
+      firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+        .then(() => {
+          window.loggedIn=true
+          browserHistory.push('/barbaraedit')
+        })
+        .catch(error => {
+          window.alert(error)
+        })
+    } else {
+      window.alert('Please fill in both your email and password')
+    }
+  }
+
+  render() {
+    const auth = firebase.auth()
+    const email = new firebase.auth.EmailAuthProvider()
+
+    return (
+      <div id="background-div">
+        <div className="jumbotron login-container" >
+          <form onSubmit={this.emailSubmit}
+                className="form-horizontal">
+            <div className="form-group">
+              <input type="text"
+                     className="login form-control"
+                     id="email"
+                     placeholder="Email"
+                     onChange={this.setEmailPassword} />
+            </div>
+            <div className="form-group">
+              <input type="password"
+                     className="form-control"
+                     id="password"
+                     placeholder="Password"
+                     onChange={this.setEmailPassword} />
+            </div>
+            <div className="form-group">
+              <button type="submit"
+                      className="login btn btn-primary btn-login"
+                      onClick={this.emailSubmit}>
+                <span className='glyphicon glyphicon-envelope'/>
+                {'       Login with Email'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    )
+  }
+}

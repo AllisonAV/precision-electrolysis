@@ -4,10 +4,12 @@ import {Router, Route, IndexRedirect, browserHistory} from 'react-router'
 import {render} from 'react-dom'
 
 import WhoAmI from './components/WhoAmI'
+import SignUp from './components/SignUp'
+import Login from './components/Login'
+import InputData from './components/InputData'
 import NotFound from './components/NotFound'
 
 import firebase from 'APP/fire'
-
 
 // Get the auth API from Firebase.
 const auth = firebase.auth()
@@ -53,6 +55,9 @@ const App = ({children}) =>
 render(
   <Router history={browserHistory}>
     <Route path="/" component={App}/>
+    <Route path="/barbarasignup" component={SignUp}/>
+    <Route path="/barbaralogin" component={Login}/>
+    <Route path="/barbaraedit" component={InputData}/>
     <Route path='*' component={NotFound}/>
   </Router>,
   document.getElementById('main')
