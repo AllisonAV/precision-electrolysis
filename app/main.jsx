@@ -10,6 +10,7 @@ import About from './components/About'
 import Eyelash from './components/Eyelash'
 import Massage from './components/Massage'
 import Electrolosys from './components/Electrolosys'
+import AppContainer from './containers/AppContainer'
 import NotFound from './components/NotFound'
 
 import firebase from 'APP/fire'
@@ -43,25 +44,19 @@ auth.onAuthStateChanged(user => user || auth.signInAnonymously())
 
 // Our root App component just renders a little frame with a nav
 // and whatever children the router gave us.
-const App = ({children}) =>
-  <div>
-    <nav>
-      <h1> testing </h1>
-    </nav>
-    {/* Render our children (whatever the router gives us) */}
-    {children}
-  </div>
 
 render(
   <Router history={browserHistory}>
-    <Route path="/" component={App}/>
     <Route path="/barbarasignup" component={SignUp}/>
     <Route path="/barbaralogin" component={Login}/>
     <Route path="/barbaraedit" component={InputData}/>
-    <Route path="/about" component={About}/>
-    <Route path="/eyelash" component={Eyelash}/>
-    <Route path="/massage" component={Massage}/>
-    <Route path="/electrolosys" component={Electrolosys}/>
+    <Route path="/" component={AppContainer} >
+      <IndexRedirect to="/about" />
+      <Route path="/about" component={About}/>
+      <Route path="/eyelash" component={Eyelash}/>
+      <Route path="/massage" component={Massage}/>
+      <Route path="/electrolosys" component={Electrolosys}/>
+    </Route>
     <Route path='*' component={NotFound}/>
   </Router>,
   document.getElementById('main')

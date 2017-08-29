@@ -9,7 +9,9 @@ export default class extends React.Component {
     this.state = {
       about: '',
       time: '',
-      rate: ''
+      rate: '',
+      initial: '',
+      fillin: ''
     }
   }
 
@@ -28,18 +30,28 @@ export default class extends React.Component {
     const electrolosysRef = db.ref('electrolosys/' + this.state.time)
     electrolosysRef.set(this.state.rate)
     .catch(error => console.log(error))
+    this.closeModal(e)
   }
 
-  saveEyelashRates = () => {
-    const eyelashRef = db.ref('eyelash/')
-    eyelashRef.set(this.state.rate)
-    .catch(error => console.log(error))
+  saveEyelashRates = (e) => {
+    if (this.state.initial) {
+      const eyelashRef = db.ref('eyelash/initial')
+      eyelashRef.set(this.state.initial)
+      .catch(error => console.log(error))
+    }
+    if (this.state.fillin) {
+      const eyelashRef = db.ref('eyelash/fillin')
+      eyelashRef.set(this.state.fillin)
+      .catch(error => console.log(error))
+    }
+    this.closeModal(e)
   }
 
-  saveMassageRates = () => {
+  saveMassageRates = (e) => {
     const massageRef = db.ref('massage/' + this.state.time)
     massageRef.set(this.state.rate)
     .catch(error => console.log(error))
+    this.closeModal(e)
   }
 
   showModal = (e) => {
@@ -75,14 +87,22 @@ export default class extends React.Component {
                 <h4 className="modal-title">Eyelashes</h4>
               </div>
               <div className="modal-body">
-                <label>Enter Cost in $$</label>
+                <label>Initial Cost</label>
                 <input
                   ref="input"
                   type="text"
                   placeholder="rate"
                   className="form-control"
                   onChange={ this.handleInput }
-                  name="rate"/>
+                  name="initial"/>
+                <label>Fill In Cost</label>
+                <input
+                  ref="input"
+                  type="text"
+                  placeholder="rate"
+                  className="form-control"
+                  onChange={ this.handleInput }
+                  name="fillin"/>
               </div>
               <div className="modal-footer">
                 <button type="button"
@@ -92,6 +112,7 @@ export default class extends React.Component {
                 </button>
                 <button type="button"
                         className="btn btn-primary"
+                        data-item="eyelash"
                         onClick={this.saveEyelashRates}>Save
                 </button>
               </div>
@@ -138,6 +159,7 @@ export default class extends React.Component {
                 </button>
                 <button type="button"
                         className="btn btn-primary"
+                        data-item="electrolosys"
                         onClick={this.saveElectrolosysRates}>Save
                 </button>
               </div>
@@ -184,11 +206,12 @@ export default class extends React.Component {
                 </button>
                 <button type="button"
                         className="btn btn-primary"
+                        data-item="massage"
                         onClick={this.saveMassageRates}>Save
                 </button>
               </div>
           </div>
-        </div>        
+        </div>
       <form>
         <h2>Please enter in some info about yourself</h2>
         <input
