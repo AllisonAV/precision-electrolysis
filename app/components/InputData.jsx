@@ -7,7 +7,9 @@ export default class extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      about: '',
+      paragraph1: '',
+      paragraph2: '',
+      paragraph3: '',
       time: '',
       rate: '',
       initial: '',
@@ -21,14 +23,26 @@ export default class extends React.Component {
   }
 
   saveAboutData = () => {
-    const aboutRef = db.ref('about/')
-    aboutRef.set(this.state.about)
-      .catch(error => console.log(error))
+    if (this.state.paragraph1) {
+      const aboutRef = db.ref('paragraph1/')
+      aboutRef.set(this.state.paragraph1)
+        .catch(error => console.log(error))
+    }
+    if (this.state.paragraph2) {
+      const aboutRef = db.ref('paragraph2/')
+      aboutRef.set(this.state.paragraph2)
+        .catch(error => console.log(error))
+    }
+    if (this.state.paragraph3) {
+      const aboutRef = db.ref('paragraph3/')
+      aboutRef.set(this.state.paragraph3)
+        .catch(error => console.log(error))
+    }
   }
 
-  saveElectrolosysRates = (e) => {
-    const electrolosysRef = db.ref('electrolosys/' + this.state.time)
-    electrolosysRef.set(this.state.rate)
+  saveElectrolysisRates = (e) => {
+    const electrolysisRef = db.ref('electrolysis/' + this.state.time)
+    electrolysisRef.set(this.state.rate)
     .catch(error => console.log(error))
     this.closeModal(e)
   }
@@ -70,7 +84,7 @@ export default class extends React.Component {
   render() {
     return (
     <div>
-      <h1>Hello Barbara!</h1>
+      <h1 className="center-text">Hello Barbara!</h1>
 {
 // Eyelash Modal
 }
@@ -119,19 +133,19 @@ export default class extends React.Component {
           </div>
         </div>
 {
-// Electrolosys Modal
+// Electrolysis Modal
 }
        <div className="modal modal-sm"
-               id="electrolosys">
+               id="electrolysis">
         <div className="modal-content ">
               <div className="modal-header">
                 <button type="button"
                         className="close"
-                        data-item="electrolosys"
+                        data-item="electrolysis"
                         onClick={this.closeModal}
                         >&times;
                 </button>
-                <h4 className="modal-title">Electrolosys</h4>
+                <h4 className="modal-title">Electrolysis</h4>
               </div>
               <div className="modal-body">
                 <label>Enter Time in Minutes</label>
@@ -154,13 +168,13 @@ export default class extends React.Component {
               <div className="modal-footer">
                 <button type="button"
                         className="btn btn-default"
-                        data-item="electrolosys"
+                        data-item="electrolysis"
                         onClick={this.closeModal}>Close
                 </button>
                 <button type="button"
                         className="btn btn-primary"
-                        data-item="electrolosys"
-                        onClick={this.saveElectrolosysRates}>Save
+                        data-item="electrolysis"
+                        onClick={this.saveElectrolysisRates}>Save
                 </button>
               </div>
           </div>
@@ -212,39 +226,62 @@ export default class extends React.Component {
               </div>
           </div>
         </div>
+{
+  // Main form
+}
       <form>
-        <h2>Please enter in some info about yourself</h2>
-        <input
-          type="text"
-          className="form-control"
-          name="about"
-          onChange={this.handleInput}/>
-        <button
-          type="submit"
-          className="btn btn-primary"
-          onClick={this.saveAboutData}>Save
-        </button>
-        <hr />
-        <button
-          type="submit"
-          className="btn btn-primary"
-          data-item="electrolosys"
-          onClick={this.showModal}>Input Electrolsys Rates
-        </button>
-        <hr />
-        <button
-          type="submit"
-          className="btn btn-primary"
-          data-item="eyelash"
-          onClick={this.showModal}>Input Eyelash Rates
-        </button>
-        <hr />
-        <button
-          type="submit"
-          className="btn btn-primary"
-          data-item="massage"
-          onClick={this.showModal}>Input Massage Rates
-        </button>
+        <div className="flex-container">
+          <div className="well">
+            <h2>Please enter in some info about yourself</h2>
+            <input
+              type="text"
+              className="form-control about"
+              placeholder="Paragraph 1"
+              name="paragraph1"
+              onChange={this.handleInput}/>
+            <input
+              type="text"
+              className="form-control about"
+              placeholder="Paragraph 2"
+              name="paragraph2"
+              onChange={this.handleInput}/>
+            <input
+              type="text"
+              className="form-control about"
+              placeholder="Paragraph 3"
+              name="paragraph3"
+              onChange={this.handleInput}/>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              onClick={this.saveAboutData}>Save
+            </button>
+          </div>
+          <hr />
+          <div className="well">
+            <h2>Click on buttons to enter in rates</h2>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              data-item="electrolysis"
+              onClick={this.showModal}>Input Electrolsys Rates
+            </button>
+            <hr />
+            <button
+              type="submit"
+              className="btn btn-primary"
+              data-item="eyelash"
+              onClick={this.showModal}>Input Eyelash Rates
+            </button>
+            <hr />
+            <button
+              type="submit"
+              className="btn btn-primary"
+              data-item="massage"
+              onClick={this.showModal}>Input Massage Rates
+            </button>
+          </div>
+        </div>
       </form>
     </div>
     )
