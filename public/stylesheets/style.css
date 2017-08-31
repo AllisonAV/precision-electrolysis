@@ -29,7 +29,8 @@
 
 .name {
   color: white;
-  font-size: 150%;
+  font-size: 200%;
+  padding-left: 35%;
 }
 
 .center-text {
@@ -40,6 +41,11 @@
   margin: 0 5%;
   background-color: Turquoise;
   justify-content: space-around;
+}
+
+.rates {
+  justify-content: space-around;
+  margin: 0 5%;
 }
 
 .about {
@@ -57,4 +63,20 @@ h2 {
 
 h1 {
   color: Turquoise;
+}
+
+h3 {
+  color: black;
+}
+
+.underNav {
+  margin-top: 10%;
+}
+
+.modal {
+  margin-left: 10%;
+}
+
+.turquoise {
+  background-color: Turquoise;
 }

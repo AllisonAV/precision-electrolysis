@@ -4,21 +4,6 @@ import firebase from 'APP/fire'
 
 const auth = firebase.auth()
 
-// Do external logins in Login
-
-// If you want to request additional permissions, you'd do it
-// like so:
-//
-// google.addScope('https://www.googleapis.com/auth/plus.login')
-//
-// What kind of permissions can you ask for? There's a lot:
-//   https://developers.google.com/identity/protocols/googlescopes
-//
-// For instance, this line will request the ability to read, send,
-// and generally manage a user's email:
-//
-// google.addScope('https://mail.google.com/')
-
 export default class extends React.Component {
   constructor(props) {
     super(props)

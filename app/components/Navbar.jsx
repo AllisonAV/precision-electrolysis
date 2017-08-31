@@ -12,7 +12,7 @@ export default class Navbar extends Component {
 
   <nav className="navbar navbar-default navbar-fixed-top">
       <div >
-        <span className="center-text name">Precision Electrolsys</span>
+        <span className="name">Precision Electrolsys</span>
         <ul className="nav navbar-right navbar-nav">
           <li>
             <Link to="/about"

@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, browserHistory } from 'react-router'
 import firebase from 'APP/fire'
 const db = firebase.database()
+const auth = firebase.auth()
 
 export default class extends React.Component {
   constructor(props) {
@@ -13,8 +14,18 @@ export default class extends React.Component {
       time: '',
       rate: '',
       initial: '',
-      fillin: ''
+      fillin: '',
+      eyelash: {},
+      electrolysis: {},
+      massage: {}
     }
+  }
+
+  componentWillMount() {
+  //   // load eyelash data if it exists
+    this.readEyelashData()
+    this.readElectrolysisData()
+    this.readMassageData()
   }
 
   handleInput = (e) => {
@@ -22,54 +33,119 @@ export default class extends React.Component {
     this.setState({[e.target.name]: e.target.value})
   }
 
+  readEyelashData = () => {
+    const eyelashRef = db.ref('eyelash')
+    eyelashRef.once('value')
+    .then((snapshot) => {
+      this.setState({eyelash: snapshot.val()})
+    })
+    .catch(error => console.log(error))
+  }
+
+  readElectrolysisData = () => {
+    const electrolysisRef = db.ref('electrolysis')
+    electrolysisRef.once('value')
+    .then((snapshot) => {
+      this.setState({electrolysis: snapshot.val()})
+    })
+    .catch(error => console.log(error))
+  }
+
+  readMassageData = () => {
+    const massageRef = db.ref('massage')
+    massageRef.once('value')
+    .then((snapshot) => {
+      this.setState({massage: snapshot.val()})
+    })
+    .catch(error => console.log(error))
+  }
+
+  deleteItem = (e) => {
+    // delete item
+    const deleteItem = e.target.getAttribute('data-item')
+    db.ref(deleteItem).remove()
+    // reread data in database and refresh screen
+    const item = deleteItem.slice(0, deleteItem.indexOf('/'))
+    switch (item) {
+    case 'eyelash' : this.readEyelashData()
+      break
+    case 'electrolysis' : this.readElectrolysisData()
+      break
+    case 'massage' : this.readMassageData()
+      break
+    }
+
+    this.closeModal2(item)
+  }
+
   saveAboutData = () => {
-    if (this.state.paragraph1) {
-      const aboutRef = db.ref('paragraph1/')
-      aboutRef.set(this.state.paragraph1)
-        .catch(error => console.log(error))
-    }
-    if (this.state.paragraph2) {
-      const aboutRef = db.ref('paragraph2/')
-      aboutRef.set(this.state.paragraph2)
-        .catch(error => console.log(error))
-    }
-    if (this.state.paragraph3) {
-      const aboutRef = db.ref('paragraph3/')
-      aboutRef.set(this.state.paragraph3)
-        .catch(error => console.log(error))
+    if (auth && auth.currentUser) {
+      if (this.state.paragraph1) {
+        const aboutRef = db.ref('paragraph1/')
+        aboutRef.set(this.state.paragraph1)
+          .catch(error => console.log(error))
+      }
+      if (this.state.paragraph2) {
+        const aboutRef = db.ref('paragraph2/')
+        aboutRef.set(this.state.paragraph2)
+          .catch(error => console.log(error))
+      }
+      if (this.state.paragraph3) {
+        const aboutRef = db.ref('paragraph3/')
+        aboutRef.set(this.state.paragraph3)
+          .catch(error => console.log(error))
+      }
+    } else {
+      window.alert('Nice Try! Only Barbara can update data!')
     }
   }
 
   saveElectrolysisRates = (e) => {
-    const electrolysisRef = db.ref('electrolysis/' + this.state.time)
-    electrolysisRef.set(this.state.rate)
-    .catch(error => console.log(error))
+    if (auth && auth.currentUser) {
+      const electrolysisRef = db.ref('electrolysis/' + this.state.time)
+      electrolysisRef.set(this.state.rate)
+      .catch(error => console.log('ERROR',error))
+      this.readElectrolysisData()
+    } else {
+      window.alert('Nice Try!  Only Barbara can update data!')
+    }
     this.closeModal(e)
   }
 
   saveEyelashRates = (e) => {
-    if (this.state.initial) {
-      const eyelashRef = db.ref('eyelash/initial')
-      eyelashRef.set(this.state.initial)
-      .catch(error => console.log(error))
-    }
-    if (this.state.fillin) {
-      const eyelashRef = db.ref('eyelash/fillin')
-      eyelashRef.set(this.state.fillin)
-      .catch(error => console.log(error))
+    if (auth && auth.currentUser) {
+      if (this.state.initial) {
+        const eyelashRef = db.ref('eyelash/initial')
+        eyelashRef.set(this.state.initial)
+        .catch(error => console.log(error))
+      }
+      if (this.state.fillin) {
+        const eyelashRef = db.ref('eyelash/fillin')
+        eyelashRef.set(this.state.fillin)
+        .catch(error => console.log(error))
+      }
+      this.readEyelashData()
+    } else {
+      window.alert('Nice Try!  Only Barbara can update data!')
     }
     this.closeModal(e)
   }
 
   saveMassageRates = (e) => {
-    const massageRef = db.ref('massage/' + this.state.time)
-    massageRef.set(this.state.rate)
-    .catch(error => console.log(error))
+    if (auth && auth.currentUser) {
+      const massageRef = db.ref('massage/' + this.state.time)
+      massageRef.set(this.state.rate)
+      .catch(error => console.log(error))
+      this.readMassageData()
+    } else {
+      window.alert('Nice Try!  Only Barbara can update data!')
+    }
     this.closeModal(e)
   }
 
   showModal = (e) => {
     e.preventDefault()
+    console.log('state', this.state)
     const modalId = e.target.getAttribute('data-item')
     document.getElementById(modalId).style.display = 'block'
   }
@@ -79,6 +155,20 @@ export default class extends React.Component {
     const modalId = e.target.getAttribute('data-item')
     this.refs.input.value = ''
     document.getElementById(modalId).style.display = 'none'
+  }
+
+  closeModal2 = (item) => {
+    // reset input modal to empty
+    this.refs.input.value = ''
+    document.getElementById(item).style.display = 'none'
+  }
+
+  logout = () => {
+    firebase.auth().signOut()
+    .then(() => {
+      browserHistory.push('/about/')
+    })
+    .catch((error) => console.log(error))
   }
 
   render() {
@@ -91,7 +181,7 @@ export default class extends React.Component {
        <div className="modal modal-sm"
                id="eyelash">
         <div className="modal-content ">
-              <div className="modal-header">
+              <div className="modal-header turquoise">
                 <button type="button"
                         className="close"
                         data-item="eyelash"
@@ -117,6 +207,34 @@ export default class extends React.Component {
                   className="form-control"
                   onChange={ this.handleInput }
                   name="fillin"/>
+              </div>
+              {
+                // list current data in database
+              }
+              <div>
+                <div className="turquoise">Current Rates
+                </div>
+                {
+      this.state.eyelash && Object.keys(this.state.eyelash).map(key => {
+        return (
+        <div key={key}
+             className="flex-container">
+          <button
+            type="submit"
+            className="close"
+            data-item={`eyelash/${key}`}
+            onClick={this.deleteItem}
+            >&times;
+          </button>
+          <div className="rates">{key}:
+          </div>
+          <div className="rates">${this.state.eyelash[key]}
+          </div>
+        </div>
+        )
+      })
+
+              }
               </div>
               <div className="modal-footer">
                 <button type="button"
@@ -165,6 +283,34 @@ export default class extends React.Component {
                   onChange={ this.handleInput }
                   name="rate"/>
               </div>
+               {
+                // list current data in database
+              }
+              <div>
+                <div className="turquoise">Current Rates
+                </div>
+                {
+      this.state.electrolysis && Object.keys(this.state.electrolysis).map(key => {
+        return (
+        <div key={key}
+             className="flex-container">
+          <button
+            type="submit"
+            className="close"
+            data-item={`electrolysis/${key}`}
+            onClick={this.deleteItem}
+            >&times;
+          </button>
+          <div className="rates">{key}:
+          </div>
+          <div className="rates">${this.state.electrolysis[key]}
+          </div>
+        </div>
+        )
+      })
+
+              }
+              </div>
               <div className="modal-footer">
                 <button type="button"
                         className="btn btn-default"
@@ -211,6 +357,33 @@ export default class extends React.Component {
                   className="form-control"
                   onChange={ this.handleInput }
                   name="rate"/>
+              </div>
+                  {
+                // list current data in database
+              }
+              <div>
+                <div className="turquoise">Current Rates
+                </div>
+                {
+      this.state.massage && Object.keys(this.state.massage).map(key => {
+        return (
+        <div key={key}
+             className="flex-container">
+          <button
+            type="submit"
+            className="close"
+            data-item={`massage/${key}`}
+            onClick={this.deleteItem}
+            >&times;
+          </button>
+          <div className="rates">{key}:
+          </div>
+          <div className="rates">${this.state.massage[key]}
+          </div>
+        </div>
+        )
+      })
+              }
               </div>
               <div className="modal-footer">
                 <button type="button"
@@ -282,6 +455,11 @@ export default class extends React.Component {
             </button>
           </div>
         </div>
+        <button
+          type="submit"
+          className="btn btn-primary"
+          onClick={this.logout}>Logout
+        </button>
       </form>
     </div>
     )
