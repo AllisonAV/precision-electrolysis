@@ -13,11 +13,14 @@ export default class extends React.Component {
       paragraph3: '',
       time: '',
       rate: '',
-      initial: '',
-      fillin: '',
+      Initial: '',
+      Fillin: '',
       eyelash: {},
       electrolysis: {},
-      massage: {}
+      massage: {},
+      eyelashParagraph: '',
+      electrolysisParagraph: '',
+      massasgeParagraph: ''
     }
   }
 
@@ -100,6 +103,26 @@ export default class extends React.Component {
     }
   }
 
+  saveDescData = () => {
+    if (auth && auth.currentUser) {
+      if (this.state.eyelashParagraph) {
+        const descRef = db.ref('eyelashParagraph/')
+        descRef.set(this.state.eyelashParagraph)
+        .catch(error => console.log(error))
+      }
+      if (this.state.electrolysisParagraph) {
+        const descRef = db.ref('electrolysisParagraph/')
+        descRef.set(this.state.electrolysisParagraph)
+        .catch(error => console.log(error))
+      }
+      if (this.state.massageParagraph) {
+        const descRef = db.ref('massageParagraph/')
+        descRef.set(this.state.massageParagraph)
+        .catch(error => console.log(error))
+      }
+    }
+  }
+
   saveElectrolysisRates = (e) => {
     if (auth && auth.currentUser) {
       const electrolysisRef = db.ref('electrolysis/' + this.state.time)
@@ -114,14 +137,14 @@ export default class extends React.Component {
 
   saveEyelashRates = (e) => {
     if (auth && auth.currentUser) {
-      if (this.state.initial) {
-        const eyelashRef = db.ref('eyelash/initial')
-        eyelashRef.set(this.state.initial)
+      if (this.state.Initial) {
+        const eyelashRef = db.ref('eyelash/Initial')
+        eyelashRef.set(this.state.Initial)
         .catch(error => console.log(error))
       }
-      if (this.state.fillin) {
-        const eyelashRef = db.ref('eyelash/fillin')
-        eyelashRef.set(this.state.fillin)
+      if (this.state.Fillin) {
+        const eyelashRef = db.ref('eyelash/Fill-in')
+        eyelashRef.set(this.state.Fillin)
         .catch(error => console.log(error))
       }
       this.readEyelashData()
@@ -145,7 +168,6 @@ export default class extends React.Component {
 
   showModal = (e) => {
     e.preventDefault()
-    console.log('state', this.state)
     const modalId = e.target.getAttribute('data-item')
     document.getElementById(modalId).style.display = 'block'
   }
@@ -198,7 +220,7 @@ export default class extends React.Component {
                   placeholder="rate"
                   className="form-control"
                   onChange={ this.handleInput }
-                  name="initial"/>
+                  name="Initial"/>
                 <label>Fill In Cost</label>
                 <input
                   ref="input"
@@ -206,7 +228,7 @@ export default class extends React.Component {
                   placeholder="rate"
                   className="form-control"
                   onChange={ this.handleInput }
-                  name="fillin"/>
+                  name="Fillin"/>
               </div>
               {
                 // list current data in database
@@ -437,7 +459,7 @@ export default class extends React.Component {
               type="submit"
               className="btn btn-primary"
               data-item="electrolysis"
-              onClick={this.showModal}>Input Electrolsys Rates
+              onClick={this.showModal}>Input Electrolysis Rates
             </button>
             <hr />
             <button
@@ -455,6 +477,36 @@ export default class extends React.Component {
             </button>
           </div>
         </div>
+        <hr />
+        <div className="well">
+          <h2>Please enter in something about Electrolysis</h2>
+          <input
+            type="text"
+            className="form-control about"
+            placeholder="Electrolysis Paragraph"
+            name="electrolysisParagraph"
+            onChange={this.handleInput}/>
+          <h2>Please enter in something about Eyelashes</h2>
+          <input
+            type="text"
+            className="form-control about"
+            placeholder="Eyelashes Paragraph"
+            name="eyelashParagraph"
+            onChange={this.handleInput}/>
+          <h2>Please enter in something about Massage</h2>
+          <input
+            type="text"
+            className="form-control about"
+            placeholder="Massage Paragraph"
+            name="massageParagraph"
+            onChange={this.handleInput}/>
+          <button
+            type="submit"
+            className="btn btnPrimary"
+            onClick={this.saveDescData}>Save
+          </button>
+        </div>
+        <hr />
         <button
           type="submit"
           className="btn btn-primary"

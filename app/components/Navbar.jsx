@@ -12,7 +12,7 @@ export default class Navbar extends Component {
 
   <nav className="navbar navbar-default navbar-fixed-top">
       <div >
-        <span className="name">Precision Electrolsys</span>
+        <span className="name">Precision Electrolysis</span>
         <ul className="nav navbar-right navbar-nav">
           <li>
             <Link to="/about"
@@ -22,7 +22,7 @@ export default class Navbar extends Component {
             <Link to="/eyelash">Eyelashes</Link>
           </li>
           <li>
-            <Link to="/electrolosys">Electrolsys</Link>
+            <Link to="/electrolosys">Electrolysis</Link>
           </li>
           <li>
             <Link to="/massage">Massage</Link>

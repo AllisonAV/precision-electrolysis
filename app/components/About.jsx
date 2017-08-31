@@ -38,6 +38,8 @@ export default class extends React.Component {
         <div className="flex-container">
           <div className="well">
             <img src="barbara.jpg"/>
+            <h3>Call to make an appointment</h3>
+            <h3>(201) 507-1886</h3>
           </div>
           <div className="well">
             <h3>{this.state.paragraph1}</h3>
